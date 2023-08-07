@@ -1,4 +1,4 @@
-import { FC, useCallback, useRef } from "react";
+import { FC, MouseEventHandler, useCallback, useRef } from "react";
 import styled from "styled-components";
 import CalendarIcon from "../icons/CalendarIcon";
 import EyeIcon from "../icons/EyeIcon";
@@ -6,6 +6,8 @@ import SkeletonBox from "../box/SkeletonBox";
 import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import DeleteIcon from "../icons/DeleteIcon";
+import EditIcon from "../icons/EditIcon";
 
 const Card = styled.div`
   min-width: 340px;
@@ -19,6 +21,7 @@ const Card = styled.div`
   box-shadow: 0 5px 20px 0 rgba(213, 213, 213, 0.47);
   background-color: #fff;
   cursor: pointer;
+  position: relative;
 `;
 
 const CardImage = styled.div`
@@ -78,51 +81,158 @@ const CardTitle = styled.span`
   color: #191919;
 `;
 
+const ButtonWrapper = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+`;
+
+const DeleteButton = styled.div`
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 9999px;
+  background-color: #ffe2e4;
+  @keyframes rotationKey {
+    0% {
+      transform: rotate(0);
+    }
+    25% {
+      transform: rotate(-30deg);
+    }
+    50% {
+      transform: rotate(0);
+    }
+    75% {
+      transform: rotate(30deg);
+    }
+    100% {
+      transform: rotate(0);
+    }
+  }
+  &:hover {
+    animation-name: rotationKey;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+`;
+
+const EditButton = styled.div`
+  width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 9999px;
+  background-color: #ffeed7;
+  @keyframes rotationKey {
+    0% {
+      transform: rotate(0);
+    }
+    25% {
+      transform: rotate(-30deg);
+    }
+    50% {
+      transform: rotate(0);
+    }
+    75% {
+      transform: rotate(30deg);
+    }
+    100% {
+      transform: rotate(0);
+    }
+  }
+  &:hover {
+    animation-name: rotationKey;
+    animation-duration: 0.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+  }
+`;
+
 export interface SSulCardProps {
+  id: number;
   date: string;
   views: number;
   title: string;
   imgSrc?: string | StaticImageData;
   link: string;
   isLoading: boolean;
+  isAdmin: boolean;
 }
 
 const SsulCard: FC<SSulCardProps> = ({
+  id,
   date,
   views,
   title,
   imgSrc,
   link,
   isLoading,
+  isAdmin,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const scale = useCallback((size: number) => {
+  const router = useRouter();
+
+  const cardScaleHandler = useCallback((size: number) => {
     const eventHandler = () => {
-      if (cardRef.current) {
-        cardRef.current.style.transform = `scale(${size})`;
-        cardRef.current.style.transition = `transform 0.2s`;
+      const target = cardRef.current;
+      if (target) {
+        target.style.transform = `scale(${size})`;
+        target.style.transition = `transform 0.2s`;
       } else {
-        console.log("something wrong");
+        console.log("no target error");
       }
     };
     return eventHandler;
   }, []);
 
-  const onCardClick = useCallback(() => {
-    setTimeout(() => {
-      window.open(link, "_blank");
-    }, 300);
-  }, [link]);
+  const cardColorHandler = useCallback((color: string) => {
+    const eventHandler = () => {
+      const target = cardRef.current;
+      if (target) {
+        target.style.backgroundColor = color;
+        target.style.transition = `backgroundColor 1.2s`;
+      } else {
+        console.log("no target error");
+      }
+    };
+    return eventHandler;
+  }, []);
+
+  const onCardClick = useCallback<MouseEventHandler<HTMLDivElement>>(
+    (e) => {
+      setTimeout(() => {
+        window.open(link, "_blank");
+      }, 300);
+    },
+    [link]
+  );
+
+  const onDeleteClick = useCallback(() => {
+    const accept = window.confirm("삭제할까?");
+    if (accept) {
+      // delte-api
+      console.log("삭제 ㅇㅋ");
+    }
+  }, []);
+
+  const onEditClick = useCallback(() => {
+    router.push(`/admin/${id}`);
+  }, [router, id]);
 
   return (
     <Card
       ref={cardRef}
-      onMouseEnter={scale(1.05)}
-      onMouseLeave={scale(1)}
-      onMouseDown={scale(0.95)}
-      onMouseUp={scale(1.05)}
-      onClick={isLoading ? undefined : onCardClick}
+      onMouseEnter={cardScaleHandler(1.05)}
+      onMouseLeave={cardScaleHandler(1)}
+      onMouseDown={cardScaleHandler(0.95)}
+      onMouseUp={cardScaleHandler(1.05)}
+      onClick={isLoading || isAdmin ? undefined : onCardClick}
     >
       <CardImage>
         {!isLoading && imgSrc && (
@@ -152,6 +262,28 @@ const SsulCard: FC<SSulCardProps> = ({
           title
         )}
       </CardTitle>
+      {isAdmin && (
+        <ButtonWrapper>
+          <EditButton
+            onMouseEnter={cardColorHandler("#ffeed7")}
+            onMouseLeave={cardColorHandler("#ffffff")}
+            onMouseDown={cardColorHandler("#ff8400")}
+            onMouseUp={cardColorHandler("#ffeed7")}
+            onClick={onEditClick}
+          >
+            <EditIcon w={60} />
+          </EditButton>
+          <DeleteButton
+            onMouseEnter={cardColorHandler("#ffe2e4")}
+            onMouseLeave={cardColorHandler("#ffffff")}
+            onMouseDown={cardColorHandler("#fa535f")}
+            onMouseUp={cardColorHandler("#ffe2e4")}
+            onClick={onDeleteClick}
+          >
+            <DeleteIcon w={60} />
+          </DeleteButton>
+        </ButtonWrapper>
+      )}
     </Card>
   );
 };
