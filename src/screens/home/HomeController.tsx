@@ -1,8 +1,12 @@
 import { FC, useCallback, useState } from "react";
 import HomeView, { HomeViewProps } from "./HomeView";
 
-const HomeController: FC = () => {
-  const viewProps: HomeViewProps = {};
+interface HomeControllerProps {
+  isAdmin: boolean;
+}
+
+const HomeController: FC<HomeControllerProps> = ({ isAdmin }) => {
+  const viewProps: HomeViewProps = { isAdmin };
 
   return <HomeView {...viewProps} />;
 };

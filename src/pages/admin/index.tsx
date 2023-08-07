@@ -1,6 +1,6 @@
 import HomeController from "@/screens/home/HomeController";
 import { NextPage } from "next";
 
-const HomePage: NextPage = () => <HomeController isAdmin={false} />;
+const AdminPage: NextPage = () => <HomeController isAdmin={true} />;
 
-export default HomePage;
+export default AdminPage;
