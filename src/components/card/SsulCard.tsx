@@ -8,8 +8,10 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import DeleteIcon from "../icons/DeleteIcon";
 import EditIcon from "../icons/EditIcon";
+import HashtagBadge from "../badge/HashtagBadge";
 
 const Card = styled.div`
+  justify-content: space-between;
   min-width: 340px;
   max-width: 340px;
   height: 340px;
@@ -74,11 +76,24 @@ const CardView = styled.div`
   gap: 4px;
 `;
 
-const CardTitle = styled.span`
+const CardTitle = styled.div`
   font-size: 14px;
+  line-height: 16px;
   letter-spacing: -0.5px;
   font-weight: bold;
   color: #191919;
+  margin-bottom: 12px;
+`;
+
+const HashtagWrapper = styled.div`
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  overflow: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const ButtonWrapper = styled.div`
@@ -155,22 +170,24 @@ const EditButton = styled.div`
 
 export interface SSulCardProps {
   id: number;
+  title: string;
+  link: string;
   date: string;
   views: number;
-  title: string;
   imgSrc?: string | StaticImageData;
-  link: string;
+  hashtags?: string[];
   isLoading: boolean;
   isAdmin: boolean;
 }
 
 const SsulCard: FC<SSulCardProps> = ({
   id,
+  title,
+  link,
   date,
   views,
-  title,
   imgSrc,
-  link,
+  hashtags,
   isLoading,
   isAdmin,
 }) => {
@@ -262,6 +279,12 @@ const SsulCard: FC<SSulCardProps> = ({
           title
         )}
       </CardTitle>
+      <HashtagWrapper>
+        {hashtags &&
+          hashtags.map((item, index) => (
+            <HashtagBadge key={index} text={item} />
+          ))}
+      </HashtagWrapper>
       {isAdmin && (
         <ButtonWrapper>
           <EditButton
