@@ -17,8 +17,10 @@ export interface HomeViewProps {
 const HomeView: FC<HomeViewProps> = ({ isAdmin }) => (
   <UI.Layout>
     <UI.Container>
-      <UI.Title>@@ 제목 </UI.Title>
-      {isAdmin ? "어드민" : "사용자"}
+      <UI.Title>
+        📚 You and My Story{" "}
+        {isAdmin && <span style={{ color: "red" }}>관리자</span>}{" "}
+      </UI.Title>
       <UI.CardWrapper>
         {isAdmin && <AddCard />}
         <SsulCard
@@ -28,6 +30,7 @@ const HomeView: FC<HomeViewProps> = ({ isAdmin }) => (
           title=""
           imgSrc=""
           link=""
+          hashtags={undefined}
           isLoading={true}
           isAdmin={isAdmin}
         />
@@ -38,6 +41,7 @@ const HomeView: FC<HomeViewProps> = ({ isAdmin }) => (
           title="제목 입니다2"
           imgSrc={undefined}
           link="https://www.naver.com"
+          hashtags={undefined}
           isLoading={false}
           isAdmin={isAdmin}
         />
@@ -49,15 +53,17 @@ const HomeView: FC<HomeViewProps> = ({ isAdmin }) => (
           imgSrc={TestImgSrc}
           link="https://www.naver.com"
           isLoading={false}
+          hashtags={["#안녕", "#하세요"]}
           isAdmin={isAdmin}
         />
         <SsulCard
           id={3}
           date={dayjs().format("YYYY.MM.DD")}
           views={9999}
-          title="제목 입니다3"
+          title="길어져버린 제목 입니다길어져버린 제목 입니다. 길어져버린 제목 입니다 길어져버린 제목 입니다"
           imgSrc={TestImgSrc}
           link="https://www.naver.com"
+          hashtags={["#길어버린해시태그", "#테스트", "#해시태그", "#입니다"]}
           isLoading={false}
           isAdmin={isAdmin}
         />
