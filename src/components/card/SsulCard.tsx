@@ -1,14 +1,15 @@
-import { FC, MouseEventHandler, useCallback, useRef } from "react";
+import { FC, MouseEventHandler, useCallback, useRef, useState } from "react";
 import styled from "styled-components";
-import CalendarIcon from "../icons/CalendarIcon";
-import EyeIcon from "../icons/EyeIcon";
+import CalendarIcon from "../icons/card/CalendarIcon";
+import EyeIcon from "../icons/card/EyeIcon";
 import SkeletonBox from "../box/SkeletonBox";
 import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
-import Link from "next/link";
-import DeleteIcon from "../icons/DeleteIcon";
-import EditIcon from "../icons/EditIcon";
+import DeleteIcon from "../icons/card/DeleteIcon";
+import EditIcon from "../icons/card/EditIcon";
 import HashtagBadge from "../badge/HashtagBadge";
+import useBoolean from "@/hooks/useBoolean";
+import SsulModal from "../modal/SsulModal";
 
 const Card = styled.div`
   justify-content: space-between;
@@ -193,6 +194,8 @@ const SsulCard: FC<SSulCardProps> = ({
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
+  const { value: isModalOpen, toggle } = useBoolean(false);
+
   const router = useRouter();
 
   const cardScaleHandler = useCallback((size: number) => {
@@ -221,15 +224,6 @@ const SsulCard: FC<SSulCardProps> = ({
     return eventHandler;
   }, []);
 
-  const onCardClick = useCallback<MouseEventHandler<HTMLDivElement>>(
-    (e) => {
-      setTimeout(() => {
-        window.open(link, "_blank");
-      }, 300);
-    },
-    [link]
-  );
-
   const onDeleteClick = useCallback(() => {
     const accept = window.confirm("삭제할까?");
     if (accept) {
@@ -243,71 +237,79 @@ const SsulCard: FC<SSulCardProps> = ({
   }, [router, id]);
 
   return (
-    <Card
-      ref={cardRef}
-      onMouseEnter={cardScaleHandler(1.05)}
-      onMouseLeave={cardScaleHandler(1)}
-      onMouseDown={cardScaleHandler(0.95)}
-      onMouseUp={cardScaleHandler(1.05)}
-      onClick={isLoading || isAdmin ? undefined : onCardClick}
-    >
-      <CardImage>
-        {!isLoading && imgSrc && (
-          <Image src={imgSrc} alt="image" width={260} height={160} />
+    <>
+      <Card
+        ref={cardRef}
+        onMouseEnter={cardScaleHandler(1.05)}
+        onMouseLeave={cardScaleHandler(1)}
+        onMouseDown={cardScaleHandler(0.95)}
+        onMouseUp={cardScaleHandler(1.05)}
+        onClick={isLoading || isAdmin ? undefined : toggle}
+      >
+        <CardImage>
+          {!isLoading && imgSrc && (
+            <Image src={imgSrc} alt="image" width={260} height={160} />
+          )}
+          {!isLoading && !imgSrc && <CardNoImage>SSUL</CardNoImage>}
+          {isLoading && <SkeletonBox />}
+        </CardImage>
+        <CardDateViewWrapper>
+          <CardDate>
+            <CalendarIcon w={16} />
+            {isLoading ? <SkeletonBox /> : date}
+          </CardDate>
+          <CardView>
+            <EyeIcon w={16} />
+            {isLoading ? <SkeletonBox /> : `${views.toLocaleString()}명`}
+          </CardView>
+        </CardDateViewWrapper>
+        <CardTitle>
+          {isLoading ? (
+            <>
+              <SkeletonBox $h="20px" />
+              <br />
+              <SkeletonBox $h="20px" />
+            </>
+          ) : (
+            title
+          )}
+        </CardTitle>
+        <HashtagWrapper>
+          {hashtags &&
+            hashtags.map((item, index) => (
+              <HashtagBadge key={index} text={item} />
+            ))}
+        </HashtagWrapper>
+        {isAdmin && (
+          <ButtonWrapper>
+            <EditButton
+              onMouseEnter={cardColorHandler("#ffeed7")}
+              onMouseLeave={cardColorHandler("#ffffff")}
+              onMouseDown={cardColorHandler("#ff8400")}
+              onMouseUp={cardColorHandler("#ffeed7")}
+              onClick={onEditClick}
+            >
+              <EditIcon w={60} />
+            </EditButton>
+            <DeleteButton
+              onMouseEnter={cardColorHandler("#ffe2e4")}
+              onMouseLeave={cardColorHandler("#ffffff")}
+              onMouseDown={cardColorHandler("#fa535f")}
+              onMouseUp={cardColorHandler("#ffe2e4")}
+              onClick={onDeleteClick}
+            >
+              <DeleteIcon w={60} />
+            </DeleteButton>
+          </ButtonWrapper>
         )}
-        {!isLoading && !imgSrc && <CardNoImage>SSUL</CardNoImage>}
-        {isLoading && <SkeletonBox />}
-      </CardImage>
-      <CardDateViewWrapper>
-        <CardDate>
-          <CalendarIcon w={16} />
-          {isLoading ? <SkeletonBox /> : date}
-        </CardDate>
-        <CardView>
-          <EyeIcon w={16} />
-          {isLoading ? <SkeletonBox /> : `${views.toLocaleString()}명`}
-        </CardView>
-      </CardDateViewWrapper>
-      <CardTitle>
-        {isLoading ? (
-          <>
-            <SkeletonBox $h="20px" />
-            <br />
-            <SkeletonBox $h="20px" />
-          </>
-        ) : (
-          title
-        )}
-      </CardTitle>
-      <HashtagWrapper>
-        {hashtags &&
-          hashtags.map((item, index) => (
-            <HashtagBadge key={index} text={item} />
-          ))}
-      </HashtagWrapper>
-      {isAdmin && (
-        <ButtonWrapper>
-          <EditButton
-            onMouseEnter={cardColorHandler("#ffeed7")}
-            onMouseLeave={cardColorHandler("#ffffff")}
-            onMouseDown={cardColorHandler("#ff8400")}
-            onMouseUp={cardColorHandler("#ffeed7")}
-            onClick={onEditClick}
-          >
-            <EditIcon w={60} />
-          </EditButton>
-          <DeleteButton
-            onMouseEnter={cardColorHandler("#ffe2e4")}
-            onMouseLeave={cardColorHandler("#ffffff")}
-            onMouseDown={cardColorHandler("#fa535f")}
-            onMouseUp={cardColorHandler("#ffe2e4")}
-            onClick={onDeleteClick}
-          >
-            <DeleteIcon w={60} />
-          </DeleteButton>
-        </ButtonWrapper>
-      )}
-    </Card>
+      </Card>
+      <SsulModal
+        isOpen={isModalOpen}
+        onClose={toggle}
+        link={link}
+        title={title}
+      />
+    </>
   );
 };
 
