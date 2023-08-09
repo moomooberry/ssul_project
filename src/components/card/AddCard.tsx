@@ -1,6 +1,6 @@
 import { FC, useCallback, useRef } from "react";
 import styled from "styled-components";
-import PlusIcon from "../icons/PlusIcon";
+import PlusIcon from "../icons/card/PlusIcon";
 import { useRouter } from "next/router";
 
 const Card = styled.div`
