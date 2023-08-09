@@ -1,6 +1,6 @@
 import { FC, MouseEventHandler } from "react";
 import styled from "styled-components";
-import CloseIcon from "../icons/CloseIcon";
+import CloseIcon from "../icons/badge/CloseIcon";
 
 const Badge = styled.div`
   position: relative;
