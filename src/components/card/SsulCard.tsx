@@ -170,14 +170,13 @@ const EditButton = styled.div`
 `;
 
 export interface SSulCardProps {
-  id: number;
+  id: string;
   title: string;
   link: string;
   date: string;
   views: number;
   imgSrc?: string | StaticImageData;
   hashtags?: string[];
-  isLoading: boolean;
   isAdmin: boolean;
 }
 
@@ -189,7 +188,6 @@ const SsulCard: FC<SSulCardProps> = ({
   views,
   imgSrc,
   hashtags,
-  isLoading,
   isAdmin,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -240,36 +238,26 @@ const SsulCard: FC<SSulCardProps> = ({
         onMouseLeave={cardScaleHandler(1)}
         onMouseDown={cardScaleHandler(0.95)}
         onMouseUp={cardScaleHandler(1.05)}
-        onClick={isLoading || isAdmin ? undefined : toggle}
+        onClick={isAdmin ? undefined : toggle}
       >
         <CardImage>
-          {!isLoading && imgSrc && (
+          {imgSrc ? (
             <Image src={imgSrc} alt="image" width={260} height={160} />
+          ) : (
+            <CardNoImage>SSUL</CardNoImage>
           )}
-          {!isLoading && !imgSrc && <CardNoImage>SSUL</CardNoImage>}
-          {isLoading && <SkeletonBox />}
         </CardImage>
         <CardDateViewWrapper>
           <CardDate>
             <CalendarIcon w={16} />
-            {isLoading ? <SkeletonBox /> : date}
+            {date}
           </CardDate>
           <CardView>
             <EyeIcon w={16} />
-            {isLoading ? <SkeletonBox /> : `${views.toLocaleString()}명`}
+            {`${views.toLocaleString()}명`}
           </CardView>
         </CardDateViewWrapper>
-        <CardTitle>
-          {isLoading ? (
-            <>
-              <SkeletonBox $h="20px" />
-              <br />
-              <SkeletonBox $h="20px" />
-            </>
-          ) : (
-            title
-          )}
-        </CardTitle>
+        <CardTitle>{title}</CardTitle>
         <HashtagWrapper>
           {hashtags &&
             hashtags.map((item, index) => (
