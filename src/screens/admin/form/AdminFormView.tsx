@@ -7,9 +7,8 @@ import {
   RefObject,
 } from "react";
 import UI from "./components/styled";
-import FlexBox from "@/components/box/FlexBox";
 import Button from "@/components/button";
-import { UseFormRegister, UseFormRegisterReturn } from "react-hook-form";
+import { UseFormRegisterReturn } from "react-hook-form";
 import HashtagBadge from "@/components/badge/HashtagBadge";
 
 export interface AdminFormFields {

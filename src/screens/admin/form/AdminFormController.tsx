@@ -1,11 +1,4 @@
-import {
-  ChangeEventHandler,
-  FC,
-  KeyboardEventHandler,
-  useCallback,
-  useRef,
-  useState,
-} from "react";
+import { FC, KeyboardEventHandler, useCallback, useRef, useState } from "react";
 import AdminFormView, {
   AdminFormFields,
   AdminFormViewProps,
@@ -41,7 +34,6 @@ const AdminFormController: FC<AdminFormControllerProps> = ({ id }) => {
   );
 
   const onHashtagDeleteClick = useCallback((index: number) => {
-    console.log("hey");
     const onClick = () => {
       setHashtags((prev) => {
         const arr = [...prev];

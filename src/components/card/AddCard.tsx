@@ -32,8 +32,6 @@ const AddCard: FC = () => {
         target.style.transform = `scale(${size})`;
         target.style.transition = `transform 0.2s`;
         target.style.backgroundColor = color;
-      } else {
-        console.log("no target error");
       }
     };
     return eventHandler;

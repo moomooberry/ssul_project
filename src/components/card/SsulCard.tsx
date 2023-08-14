@@ -204,8 +204,6 @@ const SsulCard: FC<SSulCardProps> = ({
       if (target) {
         target.style.transform = `scale(${size})`;
         target.style.transition = `transform 0.2s`;
-      } else {
-        console.log("no target error");
       }
     };
     return eventHandler;
@@ -217,8 +215,6 @@ const SsulCard: FC<SSulCardProps> = ({
       if (target) {
         target.style.backgroundColor = color;
         target.style.transition = `backgroundColor 1.2s`;
-      } else {
-        console.log("no target error");
       }
     };
     return eventHandler;

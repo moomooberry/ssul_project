@@ -1,12 +1,7 @@
-import FlexBox from "@/components/box/FlexBox";
 import { FC } from "react";
 import UI from "./components/styled";
-import Image from "next/image";
 import dayjs from "dayjs";
-import EyeIcon from "@/components/icons/EyeIcon";
-import CalendarIcon from "@/components/icons/CalendarIcon";
 import SsulCard from "@/components/card/SsulCard";
-import Link from "next/link";
 import TestImgSrc from "@/test/images/testImageLong.jpg";
 import AddCard from "@/components/card/AddCard";
 

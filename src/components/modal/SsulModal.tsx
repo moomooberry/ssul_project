@@ -71,7 +71,6 @@ const SsulModal: FC<SsulModalProps> = ({ isOpen, onClose, title, link }) => {
 
   const onDelayClose = useCallback(() => {
     if (layoutRef.current) {
-      console.log("hey");
       layoutRef.current.style.animationName = "downScale";
     }
     setTimeout(() => onClose(), 400);

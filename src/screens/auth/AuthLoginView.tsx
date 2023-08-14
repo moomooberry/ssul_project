@@ -1,6 +1,5 @@
 import { FC } from "react";
 import UI from "./components/styled";
-import FlexBox from "@/components/box/FlexBox";
 import Button from "@/components/button";
 
 export interface AuthLoginViewProps {}
