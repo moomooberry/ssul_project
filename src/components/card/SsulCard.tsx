@@ -10,6 +10,8 @@ import EditIcon from "../icons/card/EditIcon";
 import HashtagBadge from "../badge/HashtagBadge";
 import useBoolean from "@/hooks/useBoolean";
 import SsulModal from "../modal/SsulModal";
+import upPostView from "@/api/post/upPostView";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const Card = styled.div`
   justify-content: space-between;
@@ -196,6 +198,15 @@ const SsulCard: FC<SSulCardProps> = ({
 
   const router = useRouter();
 
+  const queryClient = useQueryClient();
+
+  const viewUpMutation = useMutation({
+    mutationFn: upPostView,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/post"] });
+    },
+  });
+
   const cardScaleHandler = useCallback((size: number) => {
     const eventHandler = () => {
       const target = cardRef.current;
@@ -230,6 +241,11 @@ const SsulCard: FC<SSulCardProps> = ({
     router.push(`/admin/${id}`);
   }, [router, id]);
 
+  const onCardClick = useCallback(() => {
+    viewUpMutation.mutate({ id });
+    toggle();
+  }, [id, toggle, viewUpMutation]);
+
   return (
     <>
       <Card
@@ -238,7 +254,7 @@ const SsulCard: FC<SSulCardProps> = ({
         onMouseLeave={cardScaleHandler(1)}
         onMouseDown={cardScaleHandler(0.95)}
         onMouseUp={cardScaleHandler(1.05)}
-        onClick={isAdmin ? undefined : toggle}
+        onClick={isAdmin ? undefined : onCardClick}
       >
         <CardImage>
           {imgSrc ? (
