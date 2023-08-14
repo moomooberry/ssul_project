@@ -4,6 +4,9 @@ import AdminFormView, {
   AdminFormViewProps,
 } from "./AdminFormView";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import addPost from "@/api/post/addPost";
+import { useRouter } from "next/router";
 
 interface AdminFormControllerProps {
   id?: string;
@@ -19,6 +22,18 @@ const AdminFormController: FC<AdminFormControllerProps> = ({ id }) => {
   const titleValue = watch("title");
 
   const linkValue = watch("link");
+
+  const router = useRouter();
+
+  const queryClient = useQueryClient();
+
+  const addMutation = useMutation({
+    mutationFn: addPost,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["/post"] });
+      router.push("/admin");
+    },
+  });
 
   const onHashtagKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(
     (e) => {
@@ -46,13 +61,22 @@ const AdminFormController: FC<AdminFormControllerProps> = ({ id }) => {
   }, []);
 
   const onValid = useCallback<SubmitHandler<AdminFormFields>>(
-    ({ title, link, imgSrc }) => {
-      console.log("title", title);
-      console.log("link", link);
-      console.log("hashtags", hashtags);
-      console.log("imgSrc", imgSrc?.item(0));
+    async ({ title, link, imgSrc }) => {
+      if (!id) {
+        // @@ 일단 이미지 및 카테고리 보류
+        // console.log("imgSrc", imgSrc?.item(0));
+        addMutation.mutate({
+          title,
+          link,
+          imgSrc: undefined,
+          hashtags,
+          author: "관리자",
+          category: "ssul",
+        });
+      } else {
+      }
     },
-    [hashtags]
+    [addMutation, hashtags, id]
   );
 
   const viewProps: AdminFormViewProps = {
