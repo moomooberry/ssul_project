@@ -10,6 +10,7 @@ import UI from "./components/styled";
 import Button from "@/components/button";
 import { UseFormRegisterReturn } from "react-hook-form";
 import HashtagBadge from "@/components/badge/HashtagBadge";
+import { GetDetailPostResponse } from "@/types/api/post/getDetailPost";
 
 export interface AdminFormFields {
   title: string;
@@ -19,6 +20,7 @@ export interface AdminFormFields {
 
 export interface AdminFormViewProps {
   id?: string;
+  data?: GetDetailPostResponse;
   register: { [K in keyof AdminFormFields]: UseFormRegisterReturn };
   hashtagRef: RefObject<HTMLInputElement>;
   hashtags: string[];
@@ -30,6 +32,7 @@ export interface AdminFormViewProps {
 
 const AdminFormView: FC<AdminFormViewProps> = ({
   id,
+  data,
   register,
   hashtags,
   hashtagRef,
@@ -41,7 +44,7 @@ const AdminFormView: FC<AdminFormViewProps> = ({
   <UI.Layout>
     <UI.Container>
       <UI.Title>
-        {id ? `🛠️ ${id}번째 SSUL 수정하기` : "📚 SSUL 추가하기"}
+        {id ? `🛠️ ${data?.title} 수정하기` : "📚 SSUL 추가하기"}
       </UI.Title>
 
       <UI.Box>
