@@ -12,6 +12,7 @@ import useBoolean from "@/hooks/useBoolean";
 import SsulModal from "../modal/SsulModal";
 import upPostView from "@/api/post/upPostView";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import deletePost from "@/api/post/deletePost";
 
 const Card = styled.div`
   justify-content: space-between;
@@ -207,6 +208,13 @@ const SsulCard: FC<SSulCardProps> = ({
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: deletePost,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/post"] });
+    },
+  });
+
   const cardScaleHandler = useCallback((size: number) => {
     const eventHandler = () => {
       const target = cardRef.current;
@@ -232,10 +240,9 @@ const SsulCard: FC<SSulCardProps> = ({
   const onDeleteClick = useCallback(() => {
     const accept = window.confirm("삭제할까?");
     if (accept) {
-      // delte-api
-      console.log("삭제 ㅇㅋ");
+      deleteMutation.mutate({ id });
     }
-  }, []);
+  }, [deleteMutation, id]);
 
   const onEditClick = useCallback(() => {
     router.push(`/admin/${id}`);
