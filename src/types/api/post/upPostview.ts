@@ -1,0 +1,1 @@
+export type UpPostViewResponse = string;
