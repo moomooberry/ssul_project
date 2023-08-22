@@ -2,7 +2,6 @@ import { FC } from "react";
 import HomeView, { HomeViewProps } from "./HomeView";
 import { useQuery } from "@tanstack/react-query";
 import getPostList from "@/api/post/getPostList";
-import { SSulCardProps } from "@/components/card/SsulCard";
 
 interface HomeControllerProps {
   isAdmin: boolean;

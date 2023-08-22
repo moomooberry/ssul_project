@@ -1,11 +1,4 @@
-import {
-  ChangeEventHandler,
-  EventHandler,
-  FC,
-  KeyboardEventHandler,
-  MouseEventHandler,
-  RefObject,
-} from "react";
+import { FC, KeyboardEventHandler, MouseEventHandler, RefObject } from "react";
 import UI from "./components/styled";
 import Button from "@/components/button";
 import { UseFormRegisterReturn } from "react-hook-form";

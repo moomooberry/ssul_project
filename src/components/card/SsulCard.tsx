@@ -1,8 +1,7 @@
-import { FC, MouseEventHandler, useCallback, useRef, useState } from "react";
+import { FC, useCallback, useRef } from "react";
 import styled from "styled-components";
 import CalendarIcon from "../icons/card/CalendarIcon";
 import EyeIcon from "../icons/card/EyeIcon";
-import SkeletonBox from "../box/SkeletonBox";
 import Image, { StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import DeleteIcon from "../icons/card/DeleteIcon";

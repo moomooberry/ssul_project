@@ -7,7 +7,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import login from "@/api/auth/login";
 import { useRouter } from "next/router";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosError } from "axios";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import { setToken } from "@/store/modules/auth";
 import { LoginResponse } from "@/types/api/auth/login";
@@ -26,7 +26,6 @@ const AuthLoginController: FC = () => {
     },
     onError: (err: AxiosError<ApiResponse<LoginResponse>>) => {
       if (err.isAxiosError) {
-        console.log("err", err);
         alert(`${err.response?.data.result}`);
       } else {
         alert("unknown error입니다 ❌");

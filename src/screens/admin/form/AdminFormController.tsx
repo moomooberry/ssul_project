@@ -56,7 +56,6 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
   const addMutation = useMutation({
     mutationFn: addPost,
     onSuccess: async () => {
-      console.log("성공");
       await queryClient.invalidateQueries({ queryKey: ["/post"] });
       router.push("/admin");
     },
@@ -109,7 +108,6 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
       setHashtags((prev) => {
         const arr = [...prev];
         arr.splice(index, 1);
-        console.log(arr);
         return arr;
       });
     };
