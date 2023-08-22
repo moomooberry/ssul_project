@@ -10,6 +10,10 @@ import { useRouter } from "next/router";
 import editPost from "@/api/post/editPost";
 import { GetDetailPostResponse } from "@/types/api/post/getDetailPost";
 import getDetailPost from "@/api/post/getDetailPost";
+import useAppSelector from "@/hooks/useAppSelector";
+import getAccessToken from "@/api/auth/getAccessToken";
+import useAppDispatch from "@/hooks/useAppDispatch";
+import { setToken } from "@/store/modules/auth";
 
 interface AdminFormControllerProps {
   id?: string;
@@ -28,22 +32,31 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
 
   const router = useRouter();
 
+  const { token } = useAppSelector((state) => state.auth);
+
+  const dispatch = useAppDispatch();
+
   const queryClient = useQueryClient();
 
   const { data } = useQuery(
     [
       "/post/detail",
       {
-        id: id as string,
+        id,
       },
-    ] as const,
-    ({ queryKey: [_, params] }) => getDetailPost(params),
+    ],
+    ({ queryKey: [_, params] }) =>
+      getDetailPost({
+        id: id as string,
+        accessToken: token,
+      }),
     { enabled: !!id, initialData, staleTime: Infinity }
   );
 
   const addMutation = useMutation({
     mutationFn: addPost,
     onSuccess: async () => {
+      console.log("성공");
       await queryClient.invalidateQueries({ queryKey: ["/post"] });
       router.push("/admin");
     },
@@ -108,17 +121,32 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
       if (!id) {
         // @@ 일단 이미지 및 카테고리 보류
         // console.log("imgSrc", imgSrc?.item(0));
-        addMutation.mutate({
-          title,
-          link,
-          imgSrc: undefined,
-          hashtags,
-          author: "관리자",
-          category: "ssul",
-        });
+        addMutation.mutate(
+          {
+            title,
+            link,
+            imgSrc: undefined,
+            hashtags,
+            author: "관리자",
+            category: "ssul",
+            accessToken: token,
+          },
+          {
+            // accessToken 없거나 유효하지 않을 시
+            onError: async (_, variables) => {
+              const accessToken = await getAccessToken({ refreshToken: "" });
+              dispatch(setToken(accessToken));
+              try {
+                await addMutation.mutateAsync({ ...variables, accessToken });
+              } catch (e) {
+                router.push("/auth/login");
+              }
+            },
+          }
+        );
       } else {
-        if (data) {
-          editMutation.mutate({
+        editMutation.mutate(
+          {
             id,
             title,
             link,
@@ -126,16 +154,25 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
             hashtags,
             author: "관리자",
             category: "ssul",
-          });
-        }
+            accessToken: token,
+          },
+          {
+            // accessToken 없거나 유효하지 않을 시
+            onError: async (_, variables) => {
+              const accessToken = await getAccessToken({ refreshToken: "" });
+              dispatch(setToken(accessToken));
+              try {
+                await editMutation.mutateAsync({ ...variables, accessToken });
+              } catch (e) {
+                router.push("/auth/login");
+              }
+            },
+          }
+        );
       }
     },
-    [addMutation, data, editMutation, hashtags, id]
+    [addMutation, dispatch, editMutation, hashtags, id, router, token]
   );
-
-  console.log("data입니다", data);
-  console.log("id 입니다", id);
-  console.log("initialData입니다", initialData);
 
   const viewProps: AdminFormViewProps = {
     id,
