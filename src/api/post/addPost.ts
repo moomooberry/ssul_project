@@ -1,7 +1,8 @@
 import { AddPostResponse } from "@/types/api/post/addPost";
 import api from "..";
+import { ApiRequestAccessToken, ApiResponse } from "@/types/api";
 
-interface AddPostProps {
+interface AddPostProps extends ApiRequestAccessToken {
   title: string;
   link: string;
   imgSrc?: string;
@@ -10,9 +11,16 @@ interface AddPostProps {
   category: "ssul";
 }
 
-const addPost = async (props: AddPostProps) => {
-  const { data } = await api.post<AddPostResponse>("/post/add", props);
-  return data;
+const addPost = async ({ accessToken, ...props }: AddPostProps) => {
+  const {
+    data: { result },
+  } = await api.post<ApiResponse<AddPostResponse>>("/post/add", props, {
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+
+  return result;
 };
 
 export default addPost;

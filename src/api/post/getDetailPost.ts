@@ -1,15 +1,22 @@
 import { GetDetailPostResponse } from "@/types/api/post/getDetailPost";
 import api from "..";
+import { ApiRequestAccessToken, ApiResponse } from "@/types/api";
 
-interface GetDetailPostProps {
+interface GetDetailPostProps extends ApiRequestAccessToken {
   id: string;
 }
 
-const getDetailPost = async ({ id }: GetDetailPostProps) => {
-  const { data } = await api.get<GetDetailPostResponse>("/post/detail", {
+const getDetailPost = async ({ id, accessToken }: GetDetailPostProps) => {
+  const {
+    data: { result },
+  } = await api.get<ApiResponse<GetDetailPostResponse>>("/post/detail", {
     data: { id },
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
   });
-  return data;
+
+  return result;
 };
 
 export default getDetailPost;

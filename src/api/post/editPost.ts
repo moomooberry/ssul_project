@@ -1,7 +1,8 @@
 import { EditPostResponse } from "@/types/api/post/editPost";
 import api from "..";
+import { ApiRequestAccessToken, ApiResponse } from "@/types/api";
 
-interface EditPostProps {
+interface EditPostProps extends ApiRequestAccessToken {
   id: string;
   title: string;
   link: string;
@@ -11,12 +12,23 @@ interface EditPostProps {
   category: "ssul";
 }
 
-const editPost = async ({ id, ...props }: EditPostProps) => {
-  const { data } = await api.put<EditPostResponse>("/post/edit", {
-    id,
-    data: props,
-  });
-  return data;
+const editPost = async ({ id, accessToken, ...props }: EditPostProps) => {
+  const {
+    data: { result },
+  } = await api.put<ApiResponse<EditPostResponse>>(
+    "/post/edit",
+    {
+      id,
+      data: props,
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+
+  return result;
 };
 
 export default editPost;
