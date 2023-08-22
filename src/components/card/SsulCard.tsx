@@ -13,6 +13,10 @@ import SsulModal from "../modal/SsulModal";
 import upPostView from "@/api/post/upPostView";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import deletePost from "@/api/post/deletePost";
+import useAppSelector from "@/hooks/useAppSelector";
+import { useDispatch } from "react-redux";
+import getAccessToken from "@/api/auth/getAccessToken";
+import { setToken } from "@/store/modules/auth";
 
 const Card = styled.div`
   justify-content: space-between;
@@ -199,6 +203,10 @@ const SsulCard: FC<SSulCardProps> = ({
 
   const router = useRouter();
 
+  const { token } = useAppSelector((store) => store.auth);
+
+  const dispatch = useDispatch();
+
   const queryClient = useQueryClient();
 
   const viewUpMutation = useMutation({
@@ -240,9 +248,22 @@ const SsulCard: FC<SSulCardProps> = ({
   const onDeleteClick = useCallback(() => {
     const accept = window.confirm("삭제할까?");
     if (accept) {
-      deleteMutation.mutate({ id });
+      deleteMutation.mutate(
+        { id, accessToken: token },
+        {
+          onError: async (_, variables) => {
+            const accessToken = await getAccessToken({ refreshToken: "" });
+            dispatch(setToken(accessToken));
+            try {
+              await deleteMutation.mutateAsync({ ...variables, accessToken });
+            } catch (e) {
+              router.push("/auth/login");
+            }
+          },
+        }
+      );
     }
-  }, [deleteMutation, id]);
+  }, [deleteMutation, dispatch, id, router, token]);
 
   const onEditClick = useCallback(() => {
     router.push(`/admin/${id}`);
