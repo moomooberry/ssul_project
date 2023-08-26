@@ -31,6 +31,9 @@ const Card = styled.div`
   background-color: #fff;
   cursor: pointer;
   position: relative;
+  @media (max-width: 1024px) {
+    min-width: 100%;
+  }
 `;
 
 const CardImage = styled.div`
@@ -281,6 +284,8 @@ const SsulCard: FC<SSulCardProps> = ({
         onMouseLeave={cardScaleHandler(1)}
         onMouseDown={cardScaleHandler(0.95)}
         onMouseUp={cardScaleHandler(1.05)}
+        onTouchStart={cardScaleHandler(1.05)}
+        onTouchEnd={cardScaleHandler(1)}
         onClick={isAdmin ? undefined : onCardClick}
       >
         <CardImage>
