@@ -4,6 +4,7 @@ import GlobalStyles from "@/styles/GlobalStyles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { wrapper } from "@/store";
 import { Provider as ReduxProvider } from "react-redux";
+import "@/styles/font/font.css";
 // import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function MyApp({ Component, pageProps }: AppProps) {
