@@ -1,6 +1,7 @@
 import { AddPostResponse } from "@/types/api/post/addPost";
 import api from "..";
 import { ApiRequestAccessToken, ApiResponse } from "@/types/api";
+import { CommonCategory } from "@/types/common";
 
 interface AddPostProps extends ApiRequestAccessToken {
   title: string;
@@ -8,7 +9,7 @@ interface AddPostProps extends ApiRequestAccessToken {
   imgSrc?: string;
   hashtags: string[];
   author: string;
-  category: "ssul";
+  category: CommonCategory;
 }
 
 const addPost = async ({ accessToken, ...props }: AddPostProps) => {

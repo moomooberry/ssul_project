@@ -1,3 +1,5 @@
+import { CommonCategory } from "@/types/common";
+
 export interface GetDetailPostResponse {
   id: string;
   title: string;
@@ -8,5 +10,5 @@ export interface GetDetailPostResponse {
   views: number;
   liked: number;
   created: number;
-  category: "ssul";
+  category: CommonCategory;
 }

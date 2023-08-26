@@ -52,6 +52,7 @@ const HomeView: FC<HomeViewProps> = ({
               imgSrc={item.imgSrc}
               link={item.link}
               hashtags={item.hashtags}
+              category={item.category}
               isAdmin={isAdmin}
             />
           ))}

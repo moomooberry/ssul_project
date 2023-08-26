@@ -1,6 +1,7 @@
 import { EditPostResponse } from "@/types/api/post/editPost";
 import api from "..";
 import { ApiRequestAccessToken, ApiResponse } from "@/types/api";
+import { CommonCategory } from "@/types/common";
 
 interface EditPostProps extends ApiRequestAccessToken {
   id: string;
@@ -9,7 +10,7 @@ interface EditPostProps extends ApiRequestAccessToken {
   imgSrc?: string;
   hashtags: string[];
   author: string;
-  category: "ssul";
+  category: CommonCategory;
 }
 
 const editPost = async ({ id, accessToken, ...props }: EditPostProps) => {

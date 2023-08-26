@@ -16,6 +16,7 @@ import useAppSelector from "@/hooks/useAppSelector";
 import { useDispatch } from "react-redux";
 import getAccessToken from "@/api/auth/getAccessToken";
 import { setToken } from "@/store/modules/auth";
+import { CommonCategory } from "@/types/common";
 
 const Card = styled.div`
   justify-content: space-between;
@@ -186,6 +187,7 @@ export interface SSulCardProps {
   views: number;
   imgSrc?: string | StaticImageData;
   hashtags?: string[];
+  category: CommonCategory;
   isAdmin: boolean;
 }
 
@@ -197,6 +199,7 @@ const SsulCard: FC<SSulCardProps> = ({
   views,
   imgSrc,
   hashtags,
+  category,
   isAdmin,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -292,7 +295,7 @@ const SsulCard: FC<SSulCardProps> = ({
           {imgSrc ? (
             <Image src={imgSrc} alt="image" width={260} height={160} />
           ) : (
-            <CardNoImage>SSUL</CardNoImage>
+            <CardNoImage>{category.toUpperCase()}</CardNoImage>
           )}
         </CardImage>
         <CardDateViewWrapper>
