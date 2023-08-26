@@ -4,9 +4,16 @@ import GlobalStyles from "@/styles/GlobalStyles";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { wrapper } from "@/store";
 import { Provider as ReduxProvider } from "react-redux";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: Infinity,
+      },
+    },
+  });
   const { store, props } = wrapper.useWrappedStore(pageProps);
 
   return (
@@ -19,6 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </Head>
         <GlobalStyles />
         <Component {...props} />
+        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
       </QueryClientProvider>
     </ReduxProvider>
   );
