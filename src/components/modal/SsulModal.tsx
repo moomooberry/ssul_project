@@ -33,6 +33,35 @@ const Layout = styled.div`
   animation-iteration-count: 1;
   animation-timing-function: ease-in-out;
   animation-direction: normal;
+  @media (max-width: 1024px) {
+    @keyframes upScaleMobile {
+      from {
+        width: 20vw;
+        height: 20vh;
+      }
+      to {
+        width: 90vw;
+        height: 85vh;
+      }
+    }
+    @keyframes downScaleMobile {
+      from {
+        width: 90vw;
+        height: 85vh;
+      }
+      to {
+        width: 20vw;
+        height: 20vh;
+      }
+    }
+    width: 90vw;
+    height: 85vh;
+    animation-name: upScaleMobile;
+    animation-duration: 0.5s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-direction: normal;
+  }
 `;
 
 const Header = styled.div`
@@ -71,7 +100,11 @@ const SsulModal: FC<SsulModalProps> = ({ isOpen, onClose, title, link }) => {
 
   const onDelayClose = useCallback(() => {
     if (layoutRef.current) {
-      layoutRef.current.style.animationName = "downScale";
+      if (window.innerWidth < 1024) {
+        layoutRef.current.style.animationName = "downScaleMobile";
+      } else {
+        layoutRef.current.style.animationName = "downScale";
+      }
     }
     setTimeout(() => onClose(), 400);
   }, [onClose]);
