@@ -1,6 +1,6 @@
-import { FC, useCallback, useEffect } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import HomeView, { HomeViewProps } from "./HomeView";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import getPostList from "@/api/post/getPostList";
 import useBoolean from "@/hooks/useBoolean";
 
@@ -9,33 +9,53 @@ interface HomeControllerProps {
 }
 
 const HomeController: FC<HomeControllerProps> = ({ isAdmin }) => {
+  const [page, setPage] = useState(1);
+
   const {
     value: isTitleSticky,
     setTrue: setIsTitleStickyTrue,
     setFalse: setIsTitleStickyFalse,
   } = useBoolean(false);
 
-  const onObserve = useCallback(() => {
+  const onStickyObserve = useCallback(() => {
     setIsTitleStickyFalse();
   }, [setIsTitleStickyFalse]);
 
-  const onUnObserve = useCallback(() => {
+  const onStickyUnObserve = useCallback(() => {
     setIsTitleStickyTrue();
   }, [setIsTitleStickyTrue]);
 
-  const { data, isLoading } = useQuery({
+  const { data, fetchNextPage, isLoading } = useInfiniteQuery({
     queryKey: ["/post"],
-    queryFn: getPostList,
+    queryFn: async ({ pageParam = page }) =>
+      getPostList({ p: pageParam, ps: 10 }),
+    getNextPageParam: (lastPage) => {
+      console.log("lastPage", lastPage);
+      return lastPage.page !== lastPage.totalPages
+        ? lastPage.page + 1
+        : undefined;
+    },
   });
+
+  const onFetchObserve = useCallback(() => {
+    fetchNextPage();
+  }, [fetchNextPage]);
+
+  console.log("data", data);
 
   const viewProps: HomeViewProps = {
     isAdmin,
     isLoading,
     isTitleSticky,
-    observerProps: {
+    stickyObserverProps: {
       config: { root: null, rootMargin: "0px", threshold: 1 },
-      onObserve,
-      onUnObserve,
+      onObserve: onStickyObserve,
+      onUnObserve: onStickyUnObserve,
+    },
+    fetchObserverProps: {
+      config: { root: null, rootMargin: "0px", threshold: 0.5 },
+      minHeight: "50px",
+      onObserve: onFetchObserve,
     },
     data,
   };
