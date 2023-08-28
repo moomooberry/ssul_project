@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback } from "react";
 import HomeView, { HomeViewProps } from "./HomeView";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import getPostList from "@/api/post/getPostList";
@@ -9,8 +9,6 @@ interface HomeControllerProps {
 }
 
 const HomeController: FC<HomeControllerProps> = ({ isAdmin }) => {
-  const [page, setPage] = useState(1);
-
   const {
     value: isTitleSticky,
     setTrue: setIsTitleStickyTrue,
@@ -27,8 +25,7 @@ const HomeController: FC<HomeControllerProps> = ({ isAdmin }) => {
 
   const { data, fetchNextPage, isLoading } = useInfiniteQuery({
     queryKey: ["/post"],
-    queryFn: async ({ pageParam = page }) =>
-      getPostList({ p: pageParam, ps: 10 }),
+    queryFn: async ({ pageParam = 1 }) => getPostList({ p: pageParam, ps: 10 }),
     getNextPageParam: (lastPage) => {
       return lastPage.page !== lastPage.totalPages
         ? lastPage.page + 1
