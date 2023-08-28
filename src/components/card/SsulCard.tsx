@@ -38,6 +38,7 @@ const Card = styled.div`
 `;
 
 const CardImage = styled.div`
+  position: relative;
   width: 100%;
   height: 160px;
   border-radius: 15px;
@@ -293,7 +294,13 @@ const SsulCard: FC<SSulCardProps> = ({
       >
         <CardImage>
           {imgSrc ? (
-            <Image src={imgSrc} alt="image" width={260} height={160} />
+            <Image
+              src={imgSrc}
+              alt="image"
+              layout="fill"
+              fill
+              style={{ objectFit: "cover" }}
+            />
           ) : (
             <CardNoImage>{category.toUpperCase()}</CardNoImage>
           )}
