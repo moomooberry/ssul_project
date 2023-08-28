@@ -14,6 +14,7 @@ import useAppSelector from "@/hooks/useAppSelector";
 import getAccessToken from "@/api/auth/getAccessToken";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import { setToken } from "@/store/modules/auth";
+import postImage from "@/api/image/postImage";
 
 interface AdminFormControllerProps {
   id?: string;
@@ -77,11 +78,15 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
     },
   });
 
+  const imageMutation = useMutation({
+    mutationFn: postImage,
+  });
+
   const { register, handleSubmit, watch } = useForm<AdminFormFields>({
     // @@ 일단 이미지 및 카테고리 보류
     defaultValues: {
       title: data?.title,
-      imgSrc: undefined,
+      imgSrc: data?.imgSrc,
       link: data?.link,
     },
   });
@@ -114,16 +119,31 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
     return onClick;
   }, []);
 
+  console.log("initialData", initialData);
+
   const onValid = useCallback<SubmitHandler<AdminFormFields>>(
     async ({ title, link, imgSrc }) => {
+      const file = typeof imgSrc === "string" ? undefined : imgSrc?.item(0);
+      let imgSource: string | undefined = undefined;
+
+      if (file) {
+        console.log("fileName", file);
+        await imageMutation.mutateAsync(
+          { file },
+          {
+            onSuccess: async ({ imgUrl }) => {
+              imgSource = imgUrl;
+            },
+          }
+        );
+      }
+
       if (!id) {
-        // @@ 일단 이미지 및 카테고리 보류
-        // console.log("imgSrc", imgSrc?.item(0));
         addMutation.mutate(
           {
             title,
             link,
-            imgSrc: undefined,
+            imgSrc: imgSource,
             hashtags,
             author: "관리자",
             category: "ssul",
@@ -148,7 +168,7 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
             id,
             title,
             link,
-            imgSrc: undefined,
+            imgSrc: imgSource ?? (imgSrc as string),
             hashtags,
             author: "관리자",
             category: "ssul",
@@ -169,7 +189,16 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
         );
       }
     },
-    [addMutation, dispatch, editMutation, hashtags, id, router, token]
+    [
+      addMutation,
+      dispatch,
+      editMutation,
+      hashtags,
+      id,
+      imageMutation,
+      router,
+      token,
+    ]
   );
 
   const viewProps: AdminFormViewProps = {

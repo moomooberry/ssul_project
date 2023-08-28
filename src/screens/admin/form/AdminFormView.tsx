@@ -8,7 +8,7 @@ import { GetDetailPostResponse } from "@/types/api/post/getDetailPost";
 export interface AdminFormFields {
   title: string;
   link: string;
-  imgSrc?: FileList;
+  imgSrc?: FileList | string;
 }
 
 export interface AdminFormViewProps {
@@ -71,7 +71,7 @@ const AdminFormView: FC<AdminFormViewProps> = ({
         </UI.HashTagBox>
         <UI.StlyedLabel>
           썸네일
-          <UI.StyledInput type="file" {...register.imgSrc} />
+          <UI.StyledInput type="file" accept="image/*" {...register.imgSrc} />
         </UI.StlyedLabel>
         <Button
           text="저장"
