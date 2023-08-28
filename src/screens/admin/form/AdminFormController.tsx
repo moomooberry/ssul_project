@@ -119,15 +119,12 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
     return onClick;
   }, []);
 
-  console.log("initialData", initialData);
-
   const onValid = useCallback<SubmitHandler<AdminFormFields>>(
     async ({ title, link, imgSrc }) => {
       const file = typeof imgSrc === "string" ? undefined : imgSrc?.item(0);
       let imgSource: string | undefined = undefined;
 
       if (file) {
-        console.log("fileName", file);
         await imageMutation.mutateAsync(
           { file },
           {

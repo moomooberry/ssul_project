@@ -30,7 +30,6 @@ const HomeController: FC<HomeControllerProps> = ({ isAdmin }) => {
     queryFn: async ({ pageParam = page }) =>
       getPostList({ p: pageParam, ps: 10 }),
     getNextPageParam: (lastPage) => {
-      console.log("lastPage", lastPage);
       return lastPage.page !== lastPage.totalPages
         ? lastPage.page + 1
         : undefined;
@@ -40,8 +39,6 @@ const HomeController: FC<HomeControllerProps> = ({ isAdmin }) => {
   const onFetchObserve = useCallback(() => {
     fetchNextPage();
   }, [fetchNextPage]);
-
-  console.log("data", data);
 
   const viewProps: HomeViewProps = {
     isAdmin,
