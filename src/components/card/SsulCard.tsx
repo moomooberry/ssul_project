@@ -207,6 +207,8 @@ const SsulCard: FC<SSulCardProps> = ({
 
   const { value: isModalOpen, toggle } = useBoolean(false);
 
+  const { value: isLoading, setBoolean: setLoading } = useBoolean(false);
+
   const router = useRouter();
 
   const { token } = useAppSelector((store) => store.auth);
@@ -225,6 +227,7 @@ const SsulCard: FC<SSulCardProps> = ({
   const deleteMutation = useMutation({
     mutationFn: deletePost,
     onSuccess: () => {
+      setLoading(false);
       queryClient.invalidateQueries({ queryKey: ["/post"] });
     },
   });
@@ -254,6 +257,7 @@ const SsulCard: FC<SSulCardProps> = ({
   const onDeleteClick = useCallback(() => {
     const accept = window.confirm("삭제할까?");
     if (accept) {
+      setLoading(true);
       deleteMutation.mutate(
         { id, accessToken: token },
         {
@@ -269,7 +273,7 @@ const SsulCard: FC<SSulCardProps> = ({
         }
       );
     }
-  }, [deleteMutation, dispatch, id, router, token]);
+  }, [deleteMutation, dispatch, id, router, setLoading, token]);
 
   const onEditClick = useCallback(() => {
     router.push(`/admin/${id}`);
@@ -322,7 +326,7 @@ const SsulCard: FC<SSulCardProps> = ({
               <HashtagBadge key={index} text={item} />
             ))}
         </HashtagWrapper>
-        {isAdmin && (
+        {isAdmin && !isLoading && (
           <ButtonWrapper>
             <EditButton
               onMouseEnter={cardColorHandler("#ffeed7")}

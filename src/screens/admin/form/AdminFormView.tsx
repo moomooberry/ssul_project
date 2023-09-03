@@ -21,6 +21,7 @@ export interface AdminFormViewProps {
   onHashtagDeleteClick: (index: number) => MouseEventHandler<HTMLDivElement>;
   onSubmitClick: MouseEventHandler<HTMLButtonElement>;
   isSubmitDisabled: boolean;
+  isLoading: boolean;
 }
 
 const AdminFormView: FC<AdminFormViewProps> = ({
@@ -33,6 +34,7 @@ const AdminFormView: FC<AdminFormViewProps> = ({
   onHashtagDeleteClick,
   onSubmitClick,
   isSubmitDisabled,
+  isLoading,
 }) => (
   <UI.Layout>
     <UI.Container>
@@ -75,6 +77,7 @@ const AdminFormView: FC<AdminFormViewProps> = ({
         </UI.StlyedLabel>
         <Button
           text="저장"
+          isLoading={isLoading}
           onClick={onSubmitClick}
           disabled={isSubmitDisabled}
         />

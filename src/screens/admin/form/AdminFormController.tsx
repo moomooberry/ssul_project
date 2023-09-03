@@ -15,6 +15,7 @@ import getAccessToken from "@/api/auth/getAccessToken";
 import useAppDispatch from "@/hooks/useAppDispatch";
 import { setToken } from "@/store/modules/auth";
 import postImage from "@/api/image/postImage";
+import useBoolean from "@/hooks/useBoolean";
 
 interface AdminFormControllerProps {
   id?: string;
@@ -28,6 +29,8 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
   const [hashtags, setHashtags] = useState<string[]>(
     initialData?.hashtags ?? []
   );
+
+  const { value: isLoading, setBoolean: setLoading } = useBoolean(false);
 
   const hashtagRef = useRef<HTMLInputElement>(null);
 
@@ -58,6 +61,7 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
     mutationFn: addPost,
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["/post"] });
+      setLoading(false);
       router.push("/admin");
     },
   });
@@ -74,6 +78,7 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
           },
         ],
       });
+      setLoading(false);
       router.push("/admin");
     },
   });
@@ -121,6 +126,8 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
 
   const onValid = useCallback<SubmitHandler<AdminFormFields>>(
     async ({ title, link, imgSrc }) => {
+      setLoading(true);
+
       const file = typeof imgSrc === "string" ? undefined : imgSrc?.item(0);
       let imgSource: string | undefined = undefined;
 
@@ -194,6 +201,7 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
       id,
       imageMutation,
       router,
+      setLoading,
       token,
     ]
   );
@@ -212,6 +220,7 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
     onHashtagKeyDown,
     onHashtagDeleteClick,
     isSubmitDisabled: !titleValue || !linkValue,
+    isLoading,
   };
 
   return <AdminFormView {...viewProps} />;

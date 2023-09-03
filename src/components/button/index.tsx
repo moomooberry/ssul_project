@@ -24,12 +24,13 @@ const StyledButton = styled.button`
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
+  isLoading?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ text, ...props }, ref) => (
-    <StyledButton ref={ref} {...props}>
-      {text}
+  ({ text, isLoading, disabled, ...props }, ref) => (
+    <StyledButton ref={ref} disabled={disabled || isLoading} {...props}>
+      {isLoading ? "로딩중.." : text}
     </StyledButton>
   )
 );
