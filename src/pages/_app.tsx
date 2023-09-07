@@ -26,6 +26,10 @@ function MyApp({ Component, pageProps }: AppProps) {
             name="naver-site-verification"
             content="bbbd34a0630611f8432795ff3bb4a4bc443f0857"
           />
+          <meta
+            name="google-site-verification"
+            content="Q7Oki3htl6XdMskyV4aU4UcdS_Jw_6Au66idMKhjsjA"
+          />
           <link rel="icon" href="/images/youandmystory.ico" />
           <title>너와 나의 이야기</title>
         </Head>
