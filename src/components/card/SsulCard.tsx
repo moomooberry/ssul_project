@@ -19,7 +19,6 @@ import { setToken } from "@/store/modules/auth";
 import { CommonCategory } from "@/types/common";
 
 const Card = styled.div`
-  justify-content: space-between;
   min-width: 340px;
   max-width: 340px;
   height: 340px;
@@ -301,8 +300,8 @@ const SsulCard: FC<SSulCardProps> = ({
             <Image
               src={imgSrc}
               alt="image"
-              layout="fill"
               fill
+              priority
               style={{ objectFit: "cover" }}
             />
           ) : (

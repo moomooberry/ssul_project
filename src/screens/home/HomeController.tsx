@@ -1,4 +1,4 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useEffect } from "react";
 import HomeView, { HomeViewProps } from "./HomeView";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import getPostList from "@/api/post/getPostList";

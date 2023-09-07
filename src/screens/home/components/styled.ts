@@ -9,7 +9,7 @@ const Layout = styled.div`
 `;
 
 const Container = styled.div`
-  width: 800px;
+  width: 780px;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -25,17 +25,17 @@ const Title = styled.h1<{ $isSticky: boolean }>`
   font-size: 36px;
   font-weight: 400;
   letter-spacing: -0.54px;
+  box-sizing: border-box;
   margin-bottom: 20px;
   text-align: center;
   background-color: #ffffff;
-  width: 640px;
+  width: 700px;
   padding: 20px 40px;
   border-radius: 15px;
   box-shadow: 0 5px 20px 0 rgba(213, 213, 213, 0.47);
   @media (max-width: 1024px) {
     font-size: ${({ $isSticky }) => ($isSticky ? "20px" : "24px")};
-    width: ${({ $isSticky }) =>
-      $isSticky ? `calc(100% - 40px)` : `calc(100% - 80px)`};
+    width: ${({ $isSticky }) => ($isSticky ? `calc(100% + 40px)` : `100%`)};
     padding: ${({ $isSticky }) => ($isSticky ? `15px 40px` : `30px 40px`)};
     border-radius: ${({ $isSticky }) => ($isSticky ? "0px" : "15px")};
     position: sticky;
@@ -47,6 +47,7 @@ const Title = styled.h1<{ $isSticky: boolean }>`
 
 const CardWrapper = styled.div`
   display: flex;
+  justify-content: space-between;
   width: 100%;
   flex-wrap: wrap;
   gap: 20px;
