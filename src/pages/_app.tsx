@@ -5,7 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { wrapper } from "@/store";
 import { Provider as ReduxProvider } from "react-redux";
 import "@/styles/font/font.css";
-// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useState } from "react";
 
 const TITLE = "너와 나의 이야기";
 const DESCRIPTION =
@@ -15,13 +16,17 @@ const IMG_ICON_SRC = "/images/youandmystory.ico";
 const IMG_BANNER_SRC = "/images/youandmystory_banner.png";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: Infinity,
-      },
-    },
-  });
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: Infinity,
+          },
+        },
+      })
+  );
+
   const { store, props } = wrapper.useWrappedStore(pageProps);
 
   return (
@@ -59,7 +64,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </Head>
         <GlobalStyles />
         <Component {...props} />
-        {/* <ReactQueryDevtools initialIsOpen={true} /> */}
+        <ReactQueryDevtools initialIsOpen={true} />
       </QueryClientProvider>
     </ReduxProvider>
   );
