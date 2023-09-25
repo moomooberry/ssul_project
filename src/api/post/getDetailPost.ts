@@ -10,7 +10,9 @@ const getDetailPost = async ({ id, accessToken }: GetDetailPostProps) => {
   const {
     data: { result },
   } = await api.get<ApiResponse<GetDetailPostResponse>>("/post/detail", {
-    data: { id },
+    params: {
+      id,
+    },
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
