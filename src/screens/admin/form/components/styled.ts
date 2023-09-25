@@ -109,6 +109,19 @@ const HashTagWrapper = styled.div`
   padding: 8px 0;
 `;
 
+const CategoryBox = styled.div`
+  width: 500px;
+  display: flex;
+  justify-content: space-between;
+`;
+
+const CategoryBadgeWrapper = styled.div`
+  width: 420px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+`;
+
 const AdminFormComponents = {
   Layout,
   Container,
@@ -120,6 +133,8 @@ const AdminFormComponents = {
   HashTagBox,
   HashTagDesc,
   HashTagWrapper,
+  CategoryBox,
+  CategoryBadgeWrapper,
 };
 
 export default AdminFormComponents;

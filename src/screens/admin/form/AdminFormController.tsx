@@ -16,6 +16,7 @@ import useAppDispatch from "@/hooks/useAppDispatch";
 import { setToken } from "@/store/modules/auth";
 import postImage from "@/api/image/postImage";
 import useBoolean from "@/hooks/useBoolean";
+import { CommonCategory } from "@/types/common";
 
 interface AdminFormControllerProps {
   id?: string;
@@ -26,6 +27,10 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
   id,
   initialData,
 }) => {
+  const [category, setCategory] = useState<CommonCategory>(
+    initialData?.category ?? "humor"
+  );
+
   const [hashtags, setHashtags] = useState<string[]>(
     initialData?.hashtags ?? []
   );
@@ -88,7 +93,6 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
   });
 
   const { register, handleSubmit, watch } = useForm<AdminFormFields>({
-    // @@ 일단 이미지 및 카테고리 보류
     defaultValues: {
       title: data?.title,
       imgSrc: data?.imgSrc,
@@ -99,6 +103,13 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
   const titleValue = watch("title");
 
   const linkValue = watch("link");
+
+  const onCategoryChange = useCallback((value: CommonCategory) => {
+    const onChange = () => {
+      setCategory(value);
+    };
+    return onChange;
+  }, []);
 
   const onHashtagKeyDown = useCallback<KeyboardEventHandler<HTMLInputElement>>(
     (e) => {
@@ -150,7 +161,7 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
             imgSrc: imgSource,
             hashtags,
             author: "관리자",
-            category: "ssul",
+            category,
             accessToken: token,
           },
           {
@@ -175,7 +186,7 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
             imgSrc: imgSource ?? (imgSrc as string),
             hashtags,
             author: "관리자",
-            category: "ssul",
+            category,
             accessToken: token,
           },
           {
@@ -195,6 +206,7 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
     },
     [
       addMutation,
+      category,
       dispatch,
       editMutation,
       hashtags,
@@ -215,6 +227,8 @@ const AdminFormController: FC<AdminFormControllerProps> = ({
       imgSrc: register("imgSrc"),
     },
     onSubmitClick: handleSubmit(onValid),
+    category,
+    onCategoryChange,
     hashtags,
     hashtagRef,
     onHashtagKeyDown,
