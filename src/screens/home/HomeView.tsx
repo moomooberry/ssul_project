@@ -8,12 +8,13 @@ import SkeletonCard from "@/components/card/SkeletonCard";
 import Observer, { ObserverProps } from "@/components/observer";
 import { InfiniteData } from "@tanstack/react-query";
 import { PaginationResponse } from "@/types/api";
+import ListIcon from "@/components/icons/header/ListIcon";
+import Header, { HeaderProps } from "@/components/header";
 
 export interface HomeViewProps {
   isAdmin: boolean;
   isLoading: boolean;
-  isTitleSticky: boolean;
-  stickyObserverProps: ObserverProps;
+  HeaderProps: HeaderProps;
   fetchObserverProps: ObserverProps;
   data?: InfiniteData<PaginationResponse<GetPostListResponse>>;
 }
@@ -21,18 +22,13 @@ export interface HomeViewProps {
 const HomeView: FC<HomeViewProps> = ({
   isAdmin,
   isLoading,
-  isTitleSticky,
-  stickyObserverProps,
+  HeaderProps,
   fetchObserverProps,
   data,
 }) => (
   <UI.Layout>
     <UI.Container>
-      <Observer {...stickyObserverProps} />
-      <UI.Title $isSticky={isTitleSticky}>
-        📚 You and My Story{" "}
-        {isAdmin && <span style={{ color: "red" }}>관리자</span>}{" "}
-      </UI.Title>
+      <Header {...HeaderProps} />
       <UI.CardWrapper>
         {isAdmin && <AddCard />}
         {isLoading && (

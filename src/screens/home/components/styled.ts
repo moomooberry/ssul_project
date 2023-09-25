@@ -16,12 +16,15 @@ const Container = styled.div`
   padding: 40px;
   align-items: center;
   @media (max-width: 1024px) {
-    width: auto;
+    width: 100%;
     padding: 20px;
   }
 `;
 
 const Title = styled.h1<{ $isSticky: boolean }>`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-weight: 400;
   letter-spacing: -0.54px;
   box-sizing: border-box;
