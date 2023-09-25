@@ -5,10 +5,13 @@ import {
 } from "@/types/api";
 import api from "..";
 import { GetPostListResponse } from "@/types/api/post/getPostList";
+import { CommonCategory } from "@/types/common";
 
-interface GetPostListProps extends PaginationRequest {}
+interface GetPostListProps extends PaginationRequest {
+  category: CommonCategory | "all";
+}
 
-const getPostList = async ({ p = 1, ps = 20 }: GetPostListProps) => {
+const getPostList = async ({ p = 1, ps = 20, category }: GetPostListProps) => {
   const {
     data: { result },
   } = await api.get<ApiResponse<PaginationResponse<GetPostListResponse>>>(
@@ -17,6 +20,7 @@ const getPostList = async ({ p = 1, ps = 20 }: GetPostListProps) => {
       params: {
         p,
         ps,
+        category,
       },
     }
   );
